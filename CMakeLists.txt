@@ -13,7 +13,7 @@ set(GENERATOR "$ENV{HOME}/.config/inkscape/extensions/generator.py")
 # SVG templates relative to this file
 set(SVG_EVEN "templates/template-even-fr.svg")
 set(SVG_ODD "templates/template-odd-fr.svg")
-set(DATA_FILE "calendar_data.csv")
+set(DATA_FILE "${CMAKE_SOURCE_DIR}/calendar_data.csv")
 
 # Directory where to find inkex.py
 set(INKEX_PY_DIR "/usr/share/inkscape/extensions")

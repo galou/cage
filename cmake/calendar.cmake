@@ -1,8 +1,8 @@
 # Options for inkscape's generator.py to generated pdf files.
-set(PDF_GENERATOR_OPTS --data-file=${CMAKE_SOURCE_DIR}/${DATA_FILE} --var-type=name --extra-vars=${EXTRA_REPLACEMENT} --format=pdf)
+set(PDF_GENERATOR_OPTS --data-file=${DATA_FILE} --var-type=name --extra-vars=${EXTRA_REPLACEMENT} --format=pdf)
 
 # Options for inkscape's generator.py to generated svg files.
-set(SVG_GENERATOR_OPTS --data-file=${CMAKE_SOURCE_DIR}/${DATA_FILE} --var-type=name --extra-vars=${EXTRA_REPLACEMENT} --format=svg)
+set(SVG_GENERATOR_OPTS --data-file=${DATA_FILE} --var-type=name --extra-vars=${EXTRA_REPLACEMENT} --format=svg)
 
 # PDFJOIN_CMD must point to pdfjoin of the pdfjam package.
 set(PDFJOIN_CMD pdfjoin)

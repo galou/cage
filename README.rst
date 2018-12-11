@@ -37,7 +37,7 @@ Detailled steps
 
   - Each line: ``YYYY-MM-DD,moon_phase``.
   - ``moon.csv`` until year 2031 is provided.
-  - If supported by your font, you can use the `unicode characters`_:
+  - If supported by your font, you can use the following `unicode characters`_:
 
     - New Moon Symbol "🌑", U+1F311.
     - First Quarter Moon Symbol "🌓", U+1F313 or Waxing Crescent Moon Symbol "🌒, U+1F312.
@@ -51,23 +51,28 @@ Detailled steps
     - full moon "○" (White Circle, U+25CB)
     - last quarter moon "◐" (Circle With Right Half Black, U+25D1) or "☾" (Last Quarter Moon, U+263E)
 
-  - Fancier symbols can be found on `unicode characters`_.
+  - Fancier symbols can be found on `https://www.unicode.org`_.
 
-.. _`unicode characters`: http://www.unicode.org/charts/beta/nameslist/n_1F300.html
+.. _`unicode characters`: https://www.unicode.org/charts/beta/nameslist/n_1F300.html
+.. _`https://www.unicode.org`: https://www.unicode.org/charts/beta/nameslist/n_1F300.html
 
 - Create ``months-fr.csv`` with the translations of the months of the Gregorian calendar, one month per line.
 
-- Call ``python3 /path/to/generate_csv.py\`` ``-s 8 -b birthdays.csv\`` ``-d holidays.csv\`` ``-m moon.csv\`` ``-t months-fr.csv\`` ``2018 > calendar_data.csv`` to generate the data for Inkscape's generator plugin. Here, ``calendar_data.csv`` is the file containing the calendar data. Feel free to edit it but do not mix up with the first row containing the column headers used by the generator. Call ``python3 /path/to/generate_csv.py`` for command-line options. ``generate_csv.py`` can be found at https://github.com/galou/inkscape_generator.
+- Call ``python3 /path/to/generate_csv.py\`` ``-s 8 -b birthdays.csv\`` ``-d holidays.csv\`` ``-m moon.csv\`` ``-t months-fr.csv\`` ``2018 > calendar_data.csv`` to generate the data for Inkscape's generator plugin. Here, ``calendar_data.csv`` is the file containing the calendar data. Feel free to edit it but do not mix up with the first row containing the column headers used by the generator. Call ``python3 /path/to/generate_csv.py`` for command-line options.
 
-- Copy your pictures with format landscape 4:3 to ``week-YYYY-WW.jpg`` into a single directory, where ``YYYY-WW`` corresponds to the code given in ``calendar_data.csv``, column ``code``. On operating systems supporting it, you can use symbolic links.
+- Copy your pictures with format landscape 4:3 to ``week-YYYY-WW.jpg`` into a single directory, where ``YYYY-WW`` corresponds to the code given in ``calendar_data.csv``, column ``code``. On operating systems supporting it, you can use symbolic links. ``create_links.awk``  is a script allowing to do that easierly. It takes a space-separated two-column file and creates links. The first column is the original file name, the second one the symlink which will point to the original file.
 
-- Edit ``template-odd-fr.svg`` and adapt the path in the svg element with id ``image3107`` to ``"/path/to/week-%VAR_code%.jpg"``, where ``/path/to`` needs to be adapted to the directory where you copied the pictures in the previous step.
+- Copy and edit ``template-odd-fr.svg`` and adapt the path in the svg element containing the image ``file_not_found.jpg`` to ``"/path/to/week-%VAR_code%.jpg"``, where ``/path/to`` needs to be adapted to the directory where you copied the pictures in the previous step.
 
-- Edit ``CMakeLists.txt`` and adapt it to your needs.
+- Symlink or copy/edit ``template-even-fr.svg``.
+
+- Symlink or copy the directory ``cmake``.
+
+- Copy ``CMakeLists.txt`` and adapt it to your needs.
 
 - Create a directory where to build the calendar, e.g. ``build`` inside the directory where ``CMakeLists.txt`` is. Open a terminal and go into this directory.
 
-- Call ``cmake /path/to/build_directory`` and then ``make``.
+- Call ``cmake /path/to/directory_where_CMakeLists.txt_is`` and then ``make``.
 
   - You can also call ``make ${OUTPUT_FILE}-single_page`` for easier debugging, where ``${OUTPUT_FILE}`` is the variable defined in ``CMakeLists.txt``.
 

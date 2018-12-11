@@ -10,11 +10,11 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="524.40942"
-   height="744.09448"
+   width="559.37006"
+   height="793.70081"
    id="svg11958"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="p001-cover.svg">
   <defs
      id="defs11960" />
@@ -31,26 +31,29 @@
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1280"
-     inkscape:window-height="967"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-width="3706"
+     inkscape:window-height="2049"
+     inkscape:window-x="134"
+     inkscape:window-y="55"
      inkscape:window-maximized="1"
      showguides="true"
      inkscape:guide-bbox="true"
      units="mm">
     <sodipodi:guide
        orientation="1,0"
-       position="53.149606,747.14286"
-       id="guide3042" />
+       position="56.692913,796.95238"
+       id="guide3042"
+       inkscape:locked="false" />
     <sodipodi:guide
        orientation="1,0"
-       position="488.97638,0"
-       id="guide3044" />
+       position="521.57481,0"
+       id="guide3044"
+       inkscape:locked="false" />
     <sodipodi:guide
        orientation="1,0"
-       position="271.06299,253.34646"
-       id="guide3048" />
+       position="289.13386,270.23622"
+       id="guide3048"
+       inkscape:locked="false" />
   </sodipodi:namedview>
   <metadata
      id="metadata11963">
@@ -68,24 +71,24 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-308.26769)">
+     transform="translate(0,-328.81887)">
     <text
        xml:space="preserve"
-       style="font-size:116.12783051px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
-       x="270.90506"
-       y="1003.1146"
-       id="text3728"
-       sodipodi:linespacing="125%"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.80000019px;line-height:0%;font-family:sans-serif;-inkscape-font-specification:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.06666672"
+       x="288.96539"
+       y="1069.9889"
+       id="text3728"><tspan
          sodipodi:role="line"
          id="tspan3730"
-         x="270.90506"
-         y="1003.1146">2019</tspan></text>
+         x="288.96539"
+         y="1069.9889"
+         style="font-size:123.86968231px;line-height:1.25;font-family:sans-serif;stroke-width:1.06666672">2019</tspan></text>
     <image
-       y="379.67105"
-       x="53.149597"
+       y="404.98245"
+       x="56.692905"
        id="image3891"
        xlink:href="file:///home/user/file_not_found.jpg"
-       height="326.87009"
-       width="435.82678" />
+       height="348.66144"
+       width="464.8819" />
   </g>
 </svg>
