@@ -24,8 +24,8 @@ long_ = {
 
 short_ = {
     'New year': 'nouv. an',
-    'Easter Monday': 'l. de Pâques',
-    'Labour Day': 'f. du travail',
+    'Easter Monday': 'l. Pâques',
+    'Labour Day': 'f. travail',
     'Victory in Europe Day': 'vict. 1945',
     'Ascension Thursday': 'Ascension',
     'Whit Monday': 'Pentecôte',
