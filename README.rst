@@ -27,6 +27,7 @@ Detailled steps
 - Create ``birthdays.csv``
 
   - Each line: ``YYYY-MM-DD,name``, where "YYYY-MM-DD" is the birth date. Write ``0000`` or ``0001`` for unknown birth year. Birthdays on 29th February are not supported.
+  - You can use the Unicode character U+F1FD, , with Font Awesome
 
 - Create ``holidays.csv``
 
