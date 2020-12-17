@@ -7,12 +7,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="148mm"
-   height="210mm"
+   width="138mm"
+   height="196mm"
    id="svg11958"
    version="1.1"
    inkscape:version="1.0.1 (1.0.1+r75)"
-   sodipodi:docname="notes-even-fr.svg">
+   sodipodi:docname="notes-odd-138x196-cz.svg">
   <defs
      id="defs11960" />
   <sodipodi:namedview
@@ -22,9 +22,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="269.62956"
-     inkscape:cy="445.88908"
+     inkscape:zoom="2.3220337"
+     inkscape:cx="46.056927"
+     inkscape:cy="420.30802"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -39,24 +39,32 @@
      inkscape:document-rotation="0">
     <sodipodi:guide
        orientation="0,1"
-       position="65.523809,755.90551"
+       position="0,699.2126"
        id="guide3038"
-       inkscape:locked="false" />
+       inkscape:locked="true"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
     <sodipodi:guide
        orientation="0,1"
-       position="259.04762,37.795276"
+       position="0,37.795"
        id="guide3040"
-       inkscape:locked="false" />
+       inkscape:locked="true"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
     <sodipodi:guide
        orientation="1,0"
-       position="37.795276,796.95238"
+       position="56.693,0"
        id="guide3042"
-       inkscape:locked="false" />
+       inkscape:locked="true"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
     <sodipodi:guide
        orientation="1,0"
-       position="502.67716,755.90551"
+       position="483.77953,0"
        id="guide3044"
-       inkscape:locked="false" />
+       inkscape:locked="true"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
   </sodipodi:namedview>
   <metadata
      id="metadata11963">
@@ -74,23 +82,23 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-328.81887)">
+     transform="translate(0,-381.73224)">
     <path
        style="fill:none;stroke:#000000;stroke-width:1.06667px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 37.795276,380.90031 H 502.67716"
+       d="M 56.693,437.89183 H 483.77954"
        id="path3019"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8px;line-height:0%;font-family:sans-serif;-inkscape-font-specification:Sans;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.06667"
-       x="37.795277"
-       y="377.09033"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.8px;line-height:0%;font-family:sans-serif;-inkscape-font-specification:Sans;text-align:end;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.06667"
+       x="483.77957"
+       y="434.48593"
        id="text3021"><tspan
          sodipodi:role="line"
          id="tspan3023"
-         x="37.795277"
-         y="377.09033"
-         style="font-size:12.8px;line-height:1.25;font-family:sans-serif;stroke-width:1.06667">NOTES</tspan></text>
+         x="483.77957"
+         y="434.48593"
+         style="font-size:12.8px;line-height:1.25;font-family:sans-serif;stroke-width:1.06667">POZNÁMKY</tspan></text>
   </g>
 </svg>
