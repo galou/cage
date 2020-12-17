@@ -1,4 +1,5 @@
 #!/usr/bin/gawk -E
+# Take as input a list of space separated tuples "real_file link" and create a symlink.
 
 {
 	if ($2 != "") {

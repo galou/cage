@@ -97,35 +97,35 @@ if __name__ == '__main__':
     parser = OptionParser(usage=usage)
 
     parser.add_option('-e', '--extra-weeks', dest='extra_weeks',
-            action='store', type='int', default=2,
+            action='store', type=int, default=2,
             help='extra weeks of the following year')
 
     parser.add_option('-s', '--start-page', dest='start_page',
-            action='store', type='int', default=2,
+            action='store', type=int, default=2,
             help='start page for week 1 (even number)')
 
     parser.add_option('-b', '--birthday-file', dest='birthday_file',
-            action='store', type='string', metavar='FILE', default=None,
+            action='store', type=str, metavar='FILE', default=None,
             help='birthday file with "YYYY-mm-dd,name" format')
 
     parser.add_option('-d', '--holiday-file', dest='holiday_file',
-            action='store', type='string', metavar='FILE', default=None,
+            action='store', type=str, metavar='FILE', default=None,
             help='holiday file with "YYYY-mm-dd,name" format')
 
     parser.add_option('-m', '--moon-file', dest='moon_file',
-            action='store', type='string', metavar='FILE', default=None,
+            action='store', type=str, metavar='FILE', default=None,
             help='moon file with "YYYY-mm-dd,name" format')
 
     parser.add_option('-n', '--nameday-file', dest='nameday_file',
-            action='store', type='string', metavar='FILE', default=None,
+            action='store', type=str, metavar='FILE', default=None,
             help='nameday file with "{0|1},mm-dd,name" format')
 
     parser.add_option('-t', '--month-file', dest='month_file',
-            action='store', type='string', metavar='FILE', default=None,
+            action='store', type=str, metavar='FILE', default=None,
             help='month file with one month per line')
 
     parser.add_option('-v', '--event-file', dest='event_file',
-            action='store', type='string', metavar='FILE', default=None,
+            action='store', type=str, metavar='FILE', default=None,
             help='event file with "YYYY-mm-dd,name" format')
 
     options, args = parser.parse_args()

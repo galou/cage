@@ -12,15 +12,15 @@ set(PDFBOOK_CMD pdfbook)
 
 function(generate_calendar)
 	# Entry-point to generate the calendar.
-	generate_list_step1(${FIRST_GEN_PAGE} ${LAST_GEN_PAGE} pages)
+	generate_list(pages ${FIRST_GEN_PAGE} ${LAST_GEN_PAGE} 1)
 
 	if(GENERATE_SVG)
-		add_inkscape_generator_svg()
+		add_inkscape_generator_svg(${page})
 		foreach(page IN LISTS pages)
 			add_one_generated_pdf_from_svg(${page})
 		endforeach()
 	else()
-		add_inkscape_generator_pdf()
+		add_inkscape_generator_pdf(${FIRST_GEN_PAGE} ${LAST_GEN_PAGE})
 		foreach(page IN LISTS pages)
 			add_one_generated_pdf(${page})
 		endforeach()
@@ -29,106 +29,110 @@ function(generate_calendar)
 	assemble_pdf("${pages}" "${EXTRA_BEFORE}" "${EXTRA_AFTER}")
 endfunction()
 
-function(iseven number_name result_name)
+function(iseven result number)
 	# Result 1 if the number is even, 0 otherwise.
-	math(EXPR out "${number_name} % 2")
+	math(EXPR out "${number} % 2")
 	if (${out})
 		# Odd.
-		set(${result_name} 0 PARENT_SCOPE)
+		set(${result} 0 PARENT_SCOPE)
 	else()
 		# Even.
-		set(${result_name} 1 PARENT_SCOPE)
+		set(${result} 1 PARENT_SCOPE)
 	endif()
 endfunction()
 
-function(generate_page_list_even first_page_name last_page_name result_name)
-	# Generate a list of even numbers between first_page and last_page.
-	iseven(${first_page_name} res)
-	math(EXPR start "${first_page_name} - ${res} + 1")
-	generate_list_step2(${start} ${last_page_name} ${result_name})
-	set(${result_name} ${${result_name}} PARENT_SCOPE)
+# Return the first even number greater or equal to the given number.
+function(first_even result number)
+	iseven(res ${number})
+	if (${res})
+		set(${result} ${number} PARENT_SCOPE)
+	else()
+		math(EXPR res "${number} + 1")
+		set(${result} ${res} PARENT_SCOPE)
+	endif()
 endfunction()
 
-function(generate_page_list_odd first_page_name last_page_name result_name)
-	# Generate a list of odd numbers between first_page and last_page.
-	iseven(${first_page_name} res)
-	math(EXPR start "${first_page_name} + ${res}")
-	generate_list_step2(${start} ${last_page_name} ${result_name})
-	set(${result_name} ${${result_name}} PARENT_SCOPE)
+# Return the first odd number greater or equal to the given number.
+function(first_odd result number)
+	iseven(res ${number})
+	if (${res})
+		math(EXPR res "${number} + 1")
+		set(${result} ${res} PARENT_SCOPE)
+	else()
+		set(${result} ${number} PARENT_SCOPE)
+	endif()
 endfunction()
 
-function(generate_list_step1 start end result_name)
-	# Generate a list with step 1.
-	set(${result_name} "")
-	foreach(loop_var RANGE ${start} ${end})
-		list(APPEND ${result_name} ${loop_var})
+function(generate_list result_name start end step)
+	# Generate a list with optional step from start to end, included.
+	if (${ARGC} LESS 4)
+		set(step 1)
+	endif()
+	set(result "")
+	foreach(loop_var RANGE ${start} ${end} ${step})
+		list(APPEND result ${loop_var})
 	endforeach()
-	set(${result_name} ${${result_name}} PARENT_SCOPE)
-endfunction()
-
-function(generate_list_step2 start end result_name)
-	# Generate a list with step 2.
-	set(${result_name} "")
-	foreach(loop_var RANGE ${start} ${end} 2)
-		list(APPEND ${result_name} ${loop_var})
-	endforeach()
-	set(${result_name} ${${result_name}} PARENT_SCOPE)
+	set(${result_name} ${result} PARENT_SCOPE)
 endfunction()
 
 function(prepend_zeros number_name length_name result_name)
 	# Prepend 0 so that the string is at least length long.
 	string(LENGTH ${number_name} length)
-	if (${length} GREATER ${length_name} OR ${length} EQUAL ${length_name})
+	if (${length} GREATER_EQUAL ${length_name})
 		# Nothing to be done.
 		set(${result_name} ${number_name} PARENT_SCOPE)
 	else()
 		math(EXPR missing_zero_count "${length_name} - ${length}")
-		set(${result_name} "${number_name}")
+		set(result "${number_name}")
 		foreach(loop_var RANGE 1 ${missing_zero_count})
-			set(${result_name} "0${${result_name}}")
+			set(result "0${result}")
 		endforeach()
-		set(${result_name} ${${result_name}} PARENT_SCOPE)
+		set(${result_name} ${result} PARENT_SCOPE)
 	endif()
 endfunction()
 
-function(add_inkscape_generator_pdf)
+function(add_inkscape_generator_pdf first_page last_page)
 	# Add the target to build the pdf from inkscape_generator.
 
 	set(PYTHONPATH "${INKEX_PY_DIR}:$ENV{PYTHONPATH}")
 
 	# Even pages (left).
-	set(template ${CMAKE_SOURCE_DIR}/${SVG_EVEN})
-	set(pdf_generator_template ${CMAKE_BINARY_DIR}/p%VAR_page_left%-gen.pdf)
+	first_even(first ${first_page})
+	generate_list(pages ${first} ${LAST_GEN_PAGE} 2)
+	get_generated_file_list(file_list "${pages}" "p" "-gen.pdf")
 
-	add_custom_command(OUTPUT generate-pdf-even.stamp
-		# Portable version with "-E env" available on cmake 3.2.
-		# COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} ${GENERATOR} ${PDF_GENERATOR_OPTS} --output='${CMAKE_BUILD_DIR}/${generated_svg}' ${template} 1>/dev/null
-		COMMAND PYTHONPATH=${PYTHONPATH} python2 ${GENERATOR} ${PDF_GENERATOR_OPTS} --output=${pdf_generator_template} ${template}
-		COMMAND ${CMAKE_COMMAND} -E touch generate-pdf-even.stamp
-		DEPENDS ${template}
+	set(template ${CMAKE_SOURCE_DIR}/${SVG_EVEN})
+	set(pdf_generator_template p%VAR_page_left%-gen.pdf)
+
+	add_custom_command(OUTPUT ${file_list}
+		COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} python2 ${GENERATOR} ${PDF_GENERATOR_OPTS} --output-pattern=${pdf_generator_template} ${template}
+		BYPRODUCTS file_list
+		DEPENDS ${template} ${DATA_FILE}
 		VERBATIM
 	)
 
 	add_custom_target(generate-pdf-even
 		ALL
-		DEPENDS ${template} ${generated_pdf}
+		DEPENDS ${template} ${DATA_FILE} ${file_list}
 	)
 
 	# Odd pages (right).
-	set(template ${CMAKE_SOURCE_DIR}/${SVG_ODD})
-	set(pdf_generator_template ${CMAKE_BINARY_DIR}/p%VAR_page_right%-gen.pdf)
+	first_odd(first ${first_page})
+	generate_list(pages ${first} ${LAST_GEN_PAGE} 2)
+	get_generated_file_list(file_list "${pages}" "p" "-gen.pdf")
 
-	add_custom_command(OUTPUT generate-pdf-odd.stamp
-		# Portable version with "-E env" available on cmake 3.2.
-		# COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} ${GENERATOR} ${PDF_GENERATOR_OPTS} --output='${CMAKE_BUILD_DIR}/${generated_svg}' ${template} 1>/dev/null
-		COMMAND PYTHONPATH=${PYTHONPATH} python2 ${GENERATOR} ${PDF_GENERATOR_OPTS} --output=${pdf_generator_template} ${template}
-		COMMAND ${CMAKE_COMMAND} -E touch generate-pdf-odd.stamp
-		DEPENDS ${template}
+	set(template ${CMAKE_SOURCE_DIR}/${SVG_ODD})
+	set(pdf_generator_template p%VAR_page_right%-gen.pdf)
+
+	add_custom_command(OUTPUT ${file_list}
+		COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} python2 ${GENERATOR} ${PDF_GENERATOR_OPTS} --output-pattern=${pdf_generator_template} ${template}
+		BYPRODUCTS file_list
+		DEPENDS ${template} ${DATA_FILE}
 		VERBATIM
 	)
 
 	add_custom_target(generate-pdf-odd
-		DEPENDS ${template} ${generated_pdf}
+		DEPENDS ${template} ${DATA_FILE} ${file_list}
 	)
 
 	# All generated pdf.
@@ -145,14 +149,11 @@ function(add_inkscape_generator_svg)
 
 	# Even pages (left).
 	set(template ${CMAKE_SOURCE_DIR}/${SVG_EVEN})
-	set(svg_generator_template ${CMAKE_BINARY_DIR}/p%VAR_page_left%-gen.svg)
+	set(svg_generator_template p%VAR_page_left%-gen.svg)
 
-	add_custom_command(OUTPUT generate-svg-even.stamp
-		# Portable version with "-E env" available on cmake 3.2.
-		# COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} ${GENERATOR} ${SVG_GENERATOR_OPTS} --output='${CMAKE_BUILD_DIR}/${generated_svg}' ${template} 1>/dev/null
-		COMMAND PYTHONPATH=${PYTHONPATH} python2 ${GENERATOR} ${SVG_GENERATOR_OPTS} --output=${svg_generator_template} ${template}
-		COMMAND ${CMAKE_COMMAND} -E touch generate-svg-even.stamp
-		DEPENDS ${template}
+	add_custom_command(OUTPUT ${file_list}
+		COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} python2 ${GENERATOR} ${SVG_GENERATOR_OPTS} --output-pattern=${svg_generator_template} ${template}
+		DEPENDS ${template} ${DATA_FILE}
 		COMMENT Generating generate-svg-even
 		VERBATIM
 	)
@@ -164,14 +165,11 @@ function(add_inkscape_generator_svg)
 
 	# Odd pages (right).
 	set(template ${CMAKE_SOURCE_DIR}/${SVG_ODD})
-	set(svg_generator_template ${CMAKE_BINARY_DIR}/p%VAR_page_right%-gen.svg)
+	set(svg_generator_template p%VAR_page_right%-gen.svg)
 
-	add_custom_command(OUTPUT generate-svg-odd.stamp
-		# Portable version with "-E env" available on cmake 3.2.
-		# COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} ${GENERATOR} ${SVG_GENERATOR_OPTS} --output='${CMAKE_BUILD_DIR}/${generated_svg}' ${template} 1>/dev/null
-		COMMAND PYTHONPATH=${PYTHONPATH} python2 ${GENERATOR} ${SVG_GENERATOR_OPTS} --output=${svg_generator_template} ${template}
-		COMMAND ${CMAKE_COMMAND} -E touch generate-svg-odd.stamp
-		DEPENDS ${template}
+	add_custom_command(OUTPUT ${file_list}
+		COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} python2 ${GENERATOR} ${SVG_GENERATOR_OPTS} --output-pattern=${svg_generator_template} ${template}
+		DEPENDS ${template} ${DATA_FILE}
 		COMMENT Generating generate-svg-odd
 		VERBATIM
 	)
@@ -192,7 +190,7 @@ function(add_one_generated_pdf page_name)
 	# Add the targets to generate one pdf page directly from template.
 	prepend_zeros(${page_name} 3 formatted_page)
 
-	iseven(${page_name} res)
+	iseven(res ${page_name})
 	if (${res})
 		add_custom_target(generate-pdf-p${formatted_page}
 			ALL
@@ -211,7 +209,7 @@ function(add_one_generated_pdf_from_svg page_name)
 	# These targets are not built by default.
 	prepend_zeros(${page_name} 3 formatted_page)
 
-	iseven(${page_name} res)
+	iseven(res ${page_name})
 	if (${res})
 		add_custom_target(generate-pdf-p${formatted_page}-from_svg
 			ALL
@@ -225,13 +223,15 @@ function(add_one_generated_pdf_from_svg page_name)
 	endif()
 
 	add_custom_command(OUTPUT generate-pdf-p${formatted_page}
-		COMMAND inkscape --without-gui --file=${CMAKE_BINARY_DIR}/p${formatted_page}-gen.svg --export-pdf=${CMAKE_BINARY_DIR}/p${formatted_page}-gen.pdf
+		COMMAND inkscape --without-gui --file=${CMAKE_BUILD_DIR}/p${formatted_page}-gen.svg --export-pdf=${CMAKE_BUILD_DIR}/p${formatted_page}-gen.pdf
 		COMMENT Generating p${formatted_page}.pdf from svg
 	)
-		
+
 endfunction()
 
-function(get_generated_file_list pages_name prefix_name suffix_name result_name)
+function(get_generated_file_list result_name pages_name prefix_name suffix_name)
+	# Return the list e.g. "p002-gen.pdf;p003-gen.pdf,...".
+	# Return the list ${prefix_name}00x${suffix_name} for x in pages_name.
 	set(result "")
 	foreach(page IN LISTS pages_name)
 		prepend_zeros(${page} 3 formatted_page)
@@ -240,33 +240,26 @@ function(get_generated_file_list pages_name prefix_name suffix_name result_name)
 	set(${result_name} ${result} PARENT_SCOPE)
 endfunction()
 
-function(string_join list_name separator_name result_name)
-	set(result "")
-	foreach(element IN LISTS list_name)
-		set(result "${result} ${element}")
-	endforeach()
-	set(${result_name} ${result} PARENT_SCOPE)
-endfunction()
-
 function(assemble_pdf pages_name extra_before_name extra_after_name)
-	get_generated_file_list("${pages_name}" "p" "-gen.pdf" file_list)
+	get_generated_file_list(file_list "${pages_name}" "p" "-gen.pdf")
 	string(REPLACE ".pdf" "-single_page.pdf" output_file_single_page ${OUTPUT_FILE})
 
 	add_custom_command(OUTPUT ${output_file_single_page}
 		COMMAND ${PDFJOIN_CMD} --vanilla --rotateoversize false --quiet --outfile "${output_file_single_page}" ${extra_before_name} ${file_list} ${extra_after_name}
+		DEPENDS ${extra_before_name} ${file_list} ${extra_after_name}
 	)
 
 	add_custom_command(OUTPUT ${OUTPUT_FILE}
 		COMMAND ${PDFBOOK_CMD} --vanilla --rotateoversize false --quiet --outfile "${OUTPUT_FILE}" ${extra_before_name} ${file_list} ${extra_after_name}
+		DEPENDS ${extra_before_name} ${file_list} ${extra_after_name}
 	)
 
 	add_custom_target(${OUTPUT_FILE}-single_page
-		DEPENDS generate-pdf ${output_file_single_page} ${file_list}
+		DEPENDS generate-pdf ${output_file_single_page} ${extra_before_name} ${file_list} ${extra_after_name}
 	)
 
 	add_custom_target(${OUTPUT_FILE}-booklet
 		ALL
-		DEPENDS generate-pdf ${OUTPUT_FILE} ${file_list}
+		DEPENDS generate-pdf ${OUTPUT_FILE} ${extra_before_name} ${file_list} ${extra_after_name}
 	)
 endfunction()
-

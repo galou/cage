@@ -17,6 +17,7 @@ Dependencies
 
 Steps in a glance
 -----------------
+
 - Generate extra pages manually.
 - Generate the csv data with ``generate_csv.py`` to feed ``inkscape_generator``.
 - Generate the pages from templates and glue all pages with cmake.
@@ -59,7 +60,7 @@ Detailled steps
 
 - Create ``months-fr.csv`` with the translations of the months of the Gregorian calendar, one month per line.
 
-- Call ``python3 /path/to/generate_csv.py\`` ``-s 8 -b birthdays.csv\`` ``-d holidays.csv\`` ``-m moon.csv\`` ``-t months-fr.csv\`` ``2018 > calendar_data.csv`` to generate the data for Inkscape's generator plugin. Here, ``calendar_data.csv`` is the file containing the calendar data. Feel free to edit it but do not mix up with the first row containing the column headers used by the generator. Call ``python3 /path/to/generate_csv.py`` for command-line options.
+- Call ``python3 /path/to/generate_csv.py\`` ``-s 8 -b birthdays.csv\`` ``-d holidays.csv\`` ``-m moon.csv\`` ``-t months-fr.csv\`` ``2018 > calendar_data.csv`` to generate the data for Inkscape's generator plugin. Here, ``calendar_data.csv`` is the file containing the calendar data. Feel free to edit it but do not mix up with the first row containing the column headers used by the generator. Call ``python3 /path/to/generate_csv.py --help`` for command-line options.
 
 - Copy your pictures with format landscape 4:3 to ``week-YYYY-WW.jpg`` into a single directory, where ``YYYY-WW`` corresponds to the code given in ``calendar_data.csv``, column ``code``. On operating systems supporting it, you can use symbolic links. ``create_links.awk``  is a script allowing to do that easierly. It takes a space-separated two-column file and creates links. The first column is the original file name, the second one the symlink which will point to the original file.
 
@@ -78,3 +79,10 @@ Detailled steps
   - You can also call ``make ${OUTPUT_FILE}-single_page`` for easier debugging, where ``${OUTPUT_FILE}`` is the variable defined in ``CMakeLists.txt``.
 
 - Print with options A4, landscape, long-edge binding. 
+
+Tips
+----
+
+- When using templated pictures, ensure all pictures have the same format.
+
+- Get the picture format with ``identify *.jpg | cut --delimiter=' ' --fields=1,3 | cut --delimiter='x' --output-delimiter=' ' --fields=1-3 | awk '{print $1" "$2/$3}'``, where ``identify`` is from ImageMagick.
