@@ -67,5 +67,5 @@ if __name__ == '__main__':
                 pass
             generate_holidays(start_year, end_year, length)
         except ValueError:
-            print('Usage: {} start_year [end_year] [{long|short}]', sys.argv[0])
+            print(f'Usage: {sys.argv[0]} start_year [end_year] [{long|short}]')
 

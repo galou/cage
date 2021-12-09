@@ -4,12 +4,6 @@ set(PDF_GENERATOR_OPTS --data-file=${DATA_FILE} --var-type=name --extra-vars=${E
 # Options for inkscape's generator.py to generated svg files.
 set(SVG_GENERATOR_OPTS --data-file=${DATA_FILE} --var-type=name --extra-vars=${EXTRA_REPLACEMENT} --format=svg)
 
-# PDFJOIN_CMD must point to pdfjoin of the pdfjam package.
-set(PDFJOIN_CMD pdfjoin)
-
-# PDFBOOK_CMD must point to the pdfbook command of the pdfjam package.
-set(PDFBOOK_CMD pdfbook)
-
 function(generate_calendar)
 	# Entry-point to generate the calendar.
 	generate_list(pages ${FIRST_GEN_PAGE} ${LAST_GEN_PAGE} 1)
@@ -105,9 +99,11 @@ function(add_inkscape_generator_pdf first_page last_page)
 	set(pdf_generator_template p%VAR_page_left%-gen.pdf)
 
 	add_custom_command(OUTPUT ${file_list}
-		COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} python2 ${GENERATOR} ${PDF_GENERATOR_OPTS} --output-pattern=${pdf_generator_template} ${template}
-		BYPRODUCTS file_list
+		COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} python3 ${GENERATOR} ${PDF_GENERATOR_OPTS} --output-pattern=${pdf_generator_template} ${template}
+		# BYPRODUCTS file_list
+		MAIN_DEPENDENCY ${template} ${DATA_FILE}
 		DEPENDS ${template} ${DATA_FILE}
+		COMMENT Generating even pages
 		VERBATIM
 	)
 
@@ -125,9 +121,11 @@ function(add_inkscape_generator_pdf first_page last_page)
 	set(pdf_generator_template p%VAR_page_right%-gen.pdf)
 
 	add_custom_command(OUTPUT ${file_list}
-		COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} python2 ${GENERATOR} ${PDF_GENERATOR_OPTS} --output-pattern=${pdf_generator_template} ${template}
-		BYPRODUCTS file_list
+		COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} python3 ${GENERATOR} ${PDF_GENERATOR_OPTS} --output-pattern=${pdf_generator_template} ${template}
+		# BYPRODUCTS file_list
+		MAIN_DEPENDENCY ${template} ${DATA_FILE}
 		DEPENDS ${template} ${DATA_FILE}
+		COMMENT Generating odd pages
 		VERBATIM
 	)
 
@@ -152,32 +150,32 @@ function(add_inkscape_generator_svg)
 	set(svg_generator_template p%VAR_page_left%-gen.svg)
 
 	add_custom_command(OUTPUT ${file_list}
-		COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} python2 ${GENERATOR} ${SVG_GENERATOR_OPTS} --output-pattern=${svg_generator_template} ${template}
+		COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} python3 ${GENERATOR} ${SVG_GENERATOR_OPTS} --output-pattern=${svg_generator_template} ${template}
 		DEPENDS ${template} ${DATA_FILE}
 		COMMENT Generating generate-svg-even
 		VERBATIM
 	)
 
-	add_custom_target(generate-svg-even
-		ALL
-		DEPENDS ${template} generate-svg-even.stamp
-	)
+	# add_custom_target(generate-svg-even
+	# 	ALL
+	# 	DEPENDS ${template} generate-svg-even.stamp
+	# )
 
 	# Odd pages (right).
 	set(template ${CMAKE_SOURCE_DIR}/${SVG_ODD})
 	set(svg_generator_template p%VAR_page_right%-gen.svg)
 
 	add_custom_command(OUTPUT ${file_list}
-		COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} python2 ${GENERATOR} ${SVG_GENERATOR_OPTS} --output-pattern=${svg_generator_template} ${template}
+		COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${PYTHONPATH} python3 ${GENERATOR} ${SVG_GENERATOR_OPTS} --output-pattern=${svg_generator_template} ${template}
 		DEPENDS ${template} ${DATA_FILE}
 		COMMENT Generating generate-svg-odd
 		VERBATIM
 	)
 
-	add_custom_target(generate-svg-odd
-		ALL
-		DEPENDS ${template} generate-svg-odd.stamp
-	)
+	# add_custom_target(generate-svg-odd
+	# 	ALL
+	# 	DEPENDS ${template} generate-svg-odd.stamp
+	# )
 
 	# All generated svg.
 	add_custom_target(generate-svg
@@ -190,18 +188,18 @@ function(add_one_generated_pdf page_name)
 	# Add the targets to generate one pdf page directly from template.
 	prepend_zeros(${page_name} 3 formatted_page)
 
-	iseven(res ${page_name})
-	if (${res})
-		add_custom_target(generate-pdf-p${formatted_page}
-			ALL
-			DEPENDS generate-pdf-even.stamp
-		)
-	else()
-		add_custom_target(generate-pdf-p${formatted_page}
-			ALL
-			DEPENDS generate-pdf-odd.stamp
-		)
-	endif()
+	# iseven(res ${page_name})
+	# if (${res})
+	# 	add_custom_target(generate-pdf-p${formatted_page}
+	# 		ALL
+	# 		DEPENDS generate-pdf-even.stamp
+	# 	)
+	# else()
+	# 	add_custom_target(generate-pdf-p${formatted_page}
+	# 		ALL
+	# 		DEPENDS generate-pdf-odd.stamp
+	# 	)
+	# endif()
 endfunction()
 
 function(add_one_generated_pdf_from_svg page_name)
@@ -209,21 +207,21 @@ function(add_one_generated_pdf_from_svg page_name)
 	# These targets are not built by default.
 	prepend_zeros(${page_name} 3 formatted_page)
 
-	iseven(res ${page_name})
-	if (${res})
-		add_custom_target(generate-pdf-p${formatted_page}-from_svg
-			ALL
-			DEPENDS generate-svg-even.stamp generate-pdf-p${formatted_page}
-		)
-	else()
-		add_custom_target(generate-pdf-p${formatted_page}-from_svg
-			ALL
-			DEPENDS generate-svg-odd.stamp generate-pdf-p${formatted_page}
-		)
-	endif()
+	# iseven(res ${page_name})
+	# if (${res})
+	# 	add_custom_target(generate-pdf-p${formatted_page}-from_svg
+	# 		ALL
+	# 		DEPENDS generate-svg-even.stamp generate-pdf-p${formatted_page}
+	# 	)
+	# else()
+	# 	add_custom_target(generate-pdf-p${formatted_page}-from_svg
+	# 		ALL
+	# 		DEPENDS generate-svg-odd.stamp generate-pdf-p${formatted_page}
+	# 	)
+	# endif()
 
 	add_custom_command(OUTPUT generate-pdf-p${formatted_page}
-		COMMAND inkscape --without-gui --file=${CMAKE_BUILD_DIR}/p${formatted_page}-gen.svg --export-pdf=${CMAKE_BUILD_DIR}/p${formatted_page}-gen.pdf
+		COMMAND inkscape --without-gui --file=${CMAKE_BINARY_DIR}/p${formatted_page}-gen.svg --export-pdf=${CMAKE_BINARY_DIR}/p${formatted_page}-gen.pdf
 		COMMENT Generating p${formatted_page}.pdf from svg
 	)
 
@@ -240,26 +238,38 @@ function(get_generated_file_list result_name pages_name prefix_name suffix_name)
 	set(${result_name} ${result} PARENT_SCOPE)
 endfunction()
 
+function(prefix_build_dir output_name input_name)
+	set(result "")
+	foreach(output IN LISTS input_name)
+		list(APPEND result "${CMAKE_BINARY_DIR}/${output}")
+	endforeach()
+	set(${output_name} ${result} PARENT_SCOPE)
+endfunction()
+
 function(assemble_pdf pages_name extra_before_name extra_after_name)
 	get_generated_file_list(file_list "${pages_name}" "p" "-gen.pdf")
 	string(REPLACE ".pdf" "-single_page.pdf" output_file_single_page ${OUTPUT_FILE})
 
+	prefix_build_dir(eb "${extra_before_name}")
+	prefix_build_dir(ea "${extra_after_name}")
+
 	add_custom_command(OUTPUT ${output_file_single_page}
-		COMMAND ${PDFJOIN_CMD} --vanilla --rotateoversize false --quiet --outfile "${output_file_single_page}" ${extra_before_name} ${file_list} ${extra_after_name}
-		DEPENDS ${extra_before_name} ${file_list} ${extra_after_name}
+		COMMAND pdfjam --vanilla --rotateoversize false --quiet --outfile "${output_file_single_page}" ${extra_before_name} ${file_list} ${extra_after_name}
+		DEPENDS ${eb} ${file_list} ${ea}
 	)
 
 	add_custom_command(OUTPUT ${OUTPUT_FILE}
-		COMMAND ${PDFBOOK_CMD} --vanilla --rotateoversize false --quiet --outfile "${OUTPUT_FILE}" ${extra_before_name} ${file_list} ${extra_after_name}
-		DEPENDS ${extra_before_name} ${file_list} ${extra_after_name}
+		COMMAND pdfjam --booklet true --landscape --vanilla --rotateoversize false --quiet --outfile "${OUTPUT_FILE}" ${extra_before_name} ${file_list} ${extra_after_name}
+		DEPENDS ${eb} ${file_list} ${ea}
 	)
 
 	add_custom_target(${OUTPUT_FILE}-single_page
-		DEPENDS generate-pdf ${output_file_single_page} ${extra_before_name} ${file_list} ${extra_after_name}
+		DEPENDS
+		generate-pdf ${output_file_single_page} ${eb} ${file_list} ${ea}
 	)
 
 	add_custom_target(${OUTPUT_FILE}-booklet
 		ALL
-		DEPENDS generate-pdf ${OUTPUT_FILE} ${extra_before_name} ${file_list} ${extra_after_name}
+		DEPENDS generate-pdf ${OUTPUT_FILE} ${eb} ${file_list} ${ea}
 	)
 endfunction()

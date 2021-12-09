@@ -1,4 +1,4 @@
-==================
+h==================
 Calendar generator
 ==================
 
@@ -60,9 +60,9 @@ Detailled steps
 
 - Create ``months-fr.csv`` with the translations of the months of the Gregorian calendar, one month per line.
 
-- Call ``python3 /path/to/generate_csv.py\`` ``-s 8 -b birthdays.csv\`` ``-d holidays.csv\`` ``-m moon.csv\`` ``-t months-fr.csv\`` ``2018 > calendar_data.csv`` to generate the data for Inkscape's generator plugin. Here, ``calendar_data.csv`` is the file containing the calendar data. Feel free to edit it but do not mix up with the first row containing the column headers used by the generator. Call ``python3 /path/to/generate_csv.py --help`` for command-line options.
+- Call ``python3 /path/to/generate_csv.py -s 8 -b birthdays.csv -d holidays.csv -m moon.csv -t months-fr.csv 2022 > calendar_data.csv`` to generate the data for Inkscape's generator plugin. Here, ``calendar_data.csv`` is the file containing the calendar data. Feel free to edit it but do not mix up with the first row containing the column headers used by the generator. Call ``python3 /path/to/generate_csv.py --help`` for command-line options.
 
-- Copy your pictures with format landscape 4:3 to ``week-YYYY-WW.jpg`` into a single directory, where ``YYYY-WW`` corresponds to the code given in ``calendar_data.csv``, column ``code``. On operating systems supporting it, you can use symbolic links. ``create_links.awk``  is a script allowing to do that easierly. It takes a space-separated two-column file and creates links. The first column is the original file name, the second one the symlink which will point to the original file.
+- Copy your pictures with format landscape 15:10 to ``week-YYYY-WW.jpg`` into a single directory, where ``YYYY-WW`` corresponds to the code given in ``calendar_data.csv``, column ``code``. On operating systems supporting it, you can use symbolic links. ``create_links.awk``  is a script allowing to do that easierly. It takes a space-separated two-column file and creates links. The first column is the original file name, the second one the symlink which will point to the original file. Another format can be chosen but must correspond to the image format in ``template_odd.svg``.
 
 - Copy and edit ``template-odd-fr.svg`` and adapt the path in the svg element containing the image ``file_not_found.jpg`` to ``"/path/to/week-%VAR_code%.jpg"``, where ``/path/to`` needs to be adapted to the directory where you copied the pictures in the previous step.
 
