@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
+# Generate a comma-separated-value file with one week per line. The events and
+# data such as week number, page for publiposting, for each week are separated
+# by columns.
 
 from optparse import OptionParser
 
 from csvcalendar import Calendar
+
 
 def generate_csv(year, **kwargs):
     """
@@ -39,6 +43,8 @@ def generate_csv(year, **kwargs):
 
 
 def get_months(month_file):
+    if not month_file:
+        return
     months = []
     with open(month_file, 'r') as f:
         for l in f.readlines():
