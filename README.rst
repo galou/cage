@@ -62,7 +62,7 @@ Detailled steps
 
 - Call ``python3 /path/to/generate_csv.py -s 8 -b birthdays.csv -d holidays.csv -m moon.csv -t months-fr.csv 2022 > calendar_data.csv`` to generate the data for Inkscape's generator plugin. Here, ``calendar_data.csv`` is the file containing the calendar data. Feel free to edit it but do not mix up with the first row containing the column headers used by the generator. Call ``python3 /path/to/generate_csv.py --help`` for command-line options.
 
-- Copy your pictures with format landscape 15:10 to ``week-YYYY-WW.jpg`` into a single directory, where ``YYYY-WW`` corresponds to the code given in ``calendar_data.csv``, column ``code``. On operating systems supporting it, you can use symbolic links. ``create_links.awk``  is a script allowing to do that easierly. It takes a space-separated two-column file and creates links. The first column is the original file name, the second one the symlink which will point to the original file. Another format can be chosen but must correspond to the image format in ``template_odd.svg``.
+- Copy your pictures with format landscape 15:10 to ``week-YYYY-WW.jpg`` into a single directory, where ``YYYY-WW`` corresponds to the code given in ``calendar_data.csv``, column ``code``. On operating systems supporting it, you can use symbolic links. ``create_links.awk``  is a script allowing to do that more easily. It takes a space-separated two-column file and creates links. The first column is the original file name, the second one the symlink which will point to the original file. Another format can be chosen but must correspond to the image format in ``template_odd.svg``.
 
 - Copy and edit ``template-odd-fr.svg`` and adapt the path in the svg element containing the image ``file_not_found.jpg`` to ``"/path/to/week-%VAR_code%.jpg"``, where ``/path/to`` needs to be adapted to the directory where you copied the pictures in the previous step.
 
@@ -78,7 +78,16 @@ Detailled steps
 
   - You can also call ``make ${OUTPUT_FILE}-single_page`` for easier debugging, where ``${OUTPUT_FILE}`` is the variable defined in ``CMakeLists.txt``.
 
-- Print with options A4, landscape, long-edge binding. 
+- Print with options A4, landscape, long-edge binding, color.
+
+Managing images with spreadsheet and symbolic links
+---------------------------------------------------
+
+It's easier to create the image files as symbolic links.
+You create an spreadsheet with the list of relative files (original names) and a list of week, which you can create by expanding `YYYY-01` and concatenating the string to obtain `week-YYYY-01.jpg`.
+You then export the list as text file, e.g. `links.csv`.
+Then `gawk --file create_links.awk < links.csv`.
+Beware that LibreOffice Calc may change `--` to `–`.
 
 Tips
 ----
@@ -86,3 +95,4 @@ Tips
 - When using templated pictures, ensure all pictures have the same format.
 
 - Get the picture format with ``identify *.jpg | cut --delimiter=' ' --fields=1,3 | cut --delimiter='x' --output-delimiter=' ' --fields=1-3 | awk '{print $1" "$2/$3}'``, where ``identify`` is from ImageMagick.
+

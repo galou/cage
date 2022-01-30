@@ -253,23 +253,23 @@ function(assemble_pdf pages_name extra_before_name extra_after_name)
 	prefix_build_dir(eb "${extra_before_name}")
 	prefix_build_dir(ea "${extra_after_name}")
 
-	add_custom_command(OUTPUT ${output_file_single_page}
+	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/${output_file_single_page}
 		COMMAND pdfjam --vanilla --rotateoversize false --quiet --outfile "${output_file_single_page}" ${extra_before_name} ${file_list} ${extra_after_name}
 		DEPENDS ${eb} ${file_list} ${ea}
 	)
 
-	add_custom_command(OUTPUT ${OUTPUT_FILE}
-		COMMAND pdfjam --booklet true --landscape --vanilla --rotateoversize false --quiet --outfile "${OUTPUT_FILE}" ${extra_before_name} ${file_list} ${extra_after_name}
+	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/${OUTPUT_FILE}
+		COMMAND pdfjam --booklet true --landscape --vanilla --rotateoversize false --quiet --outfile "${CMAKE_SOURCE_DIR}/${OUTPUT_FILE}" ${extra_before_name} ${file_list} ${extra_after_name}
 		DEPENDS ${eb} ${file_list} ${ea}
 	)
 
 	add_custom_target(${OUTPUT_FILE}-single_page
 		DEPENDS
-		generate-pdf ${output_file_single_page} ${eb} ${file_list} ${ea}
+		generate-pdf ${CMAKE_SOURCE_DIR}/${output_file_single_page} ${eb} ${file_list} ${ea}
 	)
 
 	add_custom_target(${OUTPUT_FILE}-booklet
 		ALL
-		DEPENDS generate-pdf ${OUTPUT_FILE} ${eb} ${file_list} ${ea}
+		DEPENDS generate-pdf ${CMAKE_SOURCE_DIR}/${OUTPUT_FILE} ${eb} ${file_list} ${ea}
 	)
 endfunction()
